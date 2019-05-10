@@ -18,7 +18,7 @@ app.use('/', router);
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true })
     .then(
         () => { console.log('Ready to use') },
-        err => console.log(err)
+        err => console.log('Error:', err)
     );
 
 app.listen(process.env.PORT, () => {
