@@ -10,6 +10,10 @@
     "author": "Ricardo Arrobo",
     "license": "ISC",
     "dependencies": {
-        "express": "^4.16.4"
+        "bcrypt": "^3.0.6",
+        "express": "^4.16.4",
+        "mongoose": "^5.5.6",
+        "mongoose-unique-validator": "^2.0.3",
+        "underscore": "^1.9.1"
     }
 }
