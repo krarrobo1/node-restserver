@@ -15,10 +15,11 @@ app.use(bodyParser.json());
 
 app.use('/', router);
 
-mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, res) => {
-    if (err) throw err;
-    console.log('Base de datos ONLINE');
-});
+mongoose.connect(process.env.URLDB, { useNewUrlParser: true })
+    .then(
+        () => { console.log('Ready to use') },
+        err => console.log(err)
+    );
 
 app.listen(process.env.PORT, () => {
     console.log('Escuchando el puerto 3000..');
