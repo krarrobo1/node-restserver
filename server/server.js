@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
-const { router } = require('./routes/usuario');
+const routes = require('./routes/index');
 const bodyParser = require('body-parser');
 
 // parse application/x-www-form-urlencoded
@@ -12,12 +12,12 @@ app.use(bodyParser.urlencoded({ extended: false })); // Middlewares
 
 // parse application/json
 app.use(bodyParser.json());
+app.use(routes);
 
-app.use('/', router);
 
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true })
     .then(
-        () => { console.log('Ready to use') },
+        () => { console.log('MongoDB Ready to use') },
         err => console.log('Error:', JSON.stringify(err, null, 2))
     );
 

@@ -3,9 +3,12 @@ const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
 const Usuario = require('../models/usuario'); // Esquema de BD
+const { verificarToken, verificarAdminRole } = require('../middlewares/auth');
 const router = express.Router();
+// Obtiene usuarios, (requiere de un token en los Headers)
 
-router.get('/usuario', (req, res) => {
+// verificarToken es un middleware de Autenticacion
+router.get('/usuario', verificarToken, (req, res) => {
 
     let estado = req.query.estado || true;
     let desde = req.query.desde || 0;
@@ -32,7 +35,8 @@ router.get('/usuario', (req, res) => {
 
 });
 
-router.post('/usuario', (req, res) => {
+//Crea un usuario nuevo
+router.post('/usuario', [verificarToken, verificarAdminRole], (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -52,8 +56,8 @@ router.post('/usuario', (req, res) => {
     });
 
 });
-
-router.put('/usuario/:id', (req, res) => {
+// Cambia la info del usuario
+router.put('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
     let id = req.params.id; // obteniendo params del url
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
     // pick filtra el objeto y retorna solamente los valores de las keys especificadas.
@@ -71,7 +75,7 @@ router.put('/usuario/:id', (req, res) => {
     });
 });
 
-router.delete('/usuario/:id', (req, res) => { // mandado params mendiante url
+router.delete('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => { // mandado params mendiante url
     let id = req.params.id;
     Usuario.findByIdAndUpdate(id, { estado: false }, { new: true }, (err, updated) => {
         if (err) return res.status(400).json({
