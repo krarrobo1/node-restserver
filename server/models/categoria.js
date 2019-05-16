@@ -17,8 +17,9 @@ let categoriaSchema = new Schema({
         type: Boolean,
         default: true
     },
-    idCreator: {
+    usuario: {
         type: ObjectId,
+        ref: 'Usuario', // Referencia al schema
         required: [true, 'El id del creador es necesario']
     }
 });

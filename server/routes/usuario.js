@@ -37,6 +37,7 @@ router.get('/usuario', verificarToken, (req, res) => {
 
 //Crea un usuario nuevo
 router.post('/usuario', [verificarToken, verificarAdminRole], (req, res) => {
+    //router.post('/usuario', (req, res) => {
     let body = req.body;
     let usuario = new Usuario({
         nombre: body.nombre,

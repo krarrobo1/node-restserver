@@ -9,16 +9,19 @@ let Categoria = require('../models/categoria');
 // Obtener todas las categorias
 
 categoriaRoute.get('/categoria', (req, res) => {
-    Categoria.find().exec((err, categorias) => {
-        if (err) return res.status(400).json({
-            ok: false,
-            err
-        });
-        res.json({
-            ok: true,
-            categorias
+    Categoria.find({})
+        .populate('usuario')
+        .exec((err, categoriadb) => {
+            if (err) return res.status(500).json({
+                ok: false,
+                err
+            });
+            res.json({
+                ok: true,
+                categoria: categoriadb
+            })
         })
-    })
+
 });
 
 //  Mostrar una categoria por ID
@@ -46,23 +49,19 @@ categoriaRoute.post('/categoria', verificarToken, (req, res) => {
     let nuevaCategoria = Categoria({
         nombre: body.nombre,
         estado: body.estado,
-        idCreator: usuario
+        usuario: usuario
     });
     nuevaCategoria.save((err, categoriaDB) => {
         if (err) return res.status(400).json({
             ok: false,
             err
         });
-        if (!categoriaDB) return res.status(400).json({
-            ok: false,
-            err
-        });
+
         res.json({
             ok: true,
             categoria: categoriaDB
         });
     });
-    // let usuario = req.usuario._id;
 });
 
 // Actualizar una categoria
@@ -91,6 +90,12 @@ categoriaRoute.delete('/categoria/:id', [verificarToken, verificarAdminRole], (r
         if (err) return res.status(500).json({
             ok: false,
             err
+        });
+        if (!removed) return res.status(400).json({
+            ok: false,
+            err: {
+                message: 'El id no existe'
+            }
         });
         res.status(200).json({
             ok: true,

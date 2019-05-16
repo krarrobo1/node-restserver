@@ -64,7 +64,7 @@ async function verify(token) {
 
 loginRoute.post('/google', async(req, res) => {
     let token = req.body.idtoken; // Obteniendo el token de la peticion Ajax
-
+    //console.log(token);
     let googleUser = await verify(token)
         .catch(err => {
             return res.status(403).json({
@@ -116,6 +116,7 @@ loginRoute.post('/google', async(req, res) => {
                     usuario: usuarioDB,
                 }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
                 // Devolvemos sus datos en el response.
+                console.log(token);
                 return res.json({
                     ok: true,
                     usuario: usuarioDB,
