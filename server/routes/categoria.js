@@ -10,7 +10,8 @@ let Categoria = require('../models/categoria');
 
 categoriaRoute.get('/categoria', (req, res) => {
     Categoria.find({})
-        .populate('usuario')
+        .sort('nombre')
+        .populate('usuario', 'nombre email')
         .exec((err, categoriadb) => {
             if (err) return res.status(500).json({
                 ok: false,
