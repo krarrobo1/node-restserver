@@ -144,7 +144,7 @@ productoRoute.delete('/productos/:id', (req, res) => {
 //Buscar producto
 productoRoute.get('/productos/buscar/:termino', verificarToken, (req, res) => {
     let termino = req.params.termino;
-
+    // Expresion regular para buscar coincidencias entre Strings.
     let regexp = new RegExp(termino, 'i');
     Producto.find({ nombre: regexp })
         .populate('categoria', 'nombre')
