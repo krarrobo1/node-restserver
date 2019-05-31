@@ -3,6 +3,7 @@ const fileUpload = require('express-fileupload');
 const file = express.Router();
 
 const Usuario = require('../models/usuario');
+const Producto = require('../models/producto');
 
 const fs = require('fs');
 const path = require('path');
@@ -51,9 +52,15 @@ file.put('/upload/:tipo/:id', (req, res) => {
     let nombreArchivo = `${id}-${new Date().getMilliseconds()}.${extension}`;
     archivo.mv(`uploads/${tipo}/${nombreArchivo}`, err => {
         if (err) return res.status(500).json({ ok: false, err });
-        imagenUsuario(id, res, nombreArchivo);
+        switch (`${tipo}`) {
+            case 'usuarios':
+                imagenUsuario(id, res, nombreArchivo);
+                break;
+            case 'productos':
+                imagenProducto(id, res, nombreArchivo);
+                break;
+        }
     });
-
 });
 
 function imagenUsuario(id, res, nombreArchivo) {
@@ -81,6 +88,34 @@ function imagenUsuario(id, res, nombreArchivo) {
         usuarioDB.save();
         res.json({
             usuario: usuarioDB,
+            img: nombreArchivo
+        });
+    });
+}
+
+function imagenProducto(id, res, nombreArchivo) {
+    Producto.findById(id, (err, productoDB) => {
+        if (err) {
+            borrarArchivo(nombreArchivo, 'productos');
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        };
+        if (!productoDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Producto no encontrado'
+                }
+            })
+        };
+        borrarArchivo(productoDB.img, 'productos');
+        productoDB.img = nombreArchivo;
+        productoDB.save();
+        res.json({
+            ok: true,
+            producto: productoDB,
             img: nombreArchivo
         });
     });
