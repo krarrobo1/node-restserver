@@ -39,7 +39,26 @@ let verificarAdminRole = (req, res, next) => {
     next();
 };
 
+// Verifica token para imagen
+let verificarTokenImg = (req, res, next) => {
+    let token = req.query.token;
+
+    JWT.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) return res.status(401).json({
+            ok: false,
+            err: {
+                message: 'Token no valido'
+            }
+        });
+        // Si coincide escribe una propieda usuario en el request
+        req.usuario = decoded.usuario; // decoded (payload del token)
+        // Continua con el flujo de ejecucion
+        next();
+    });
+}
+
 module.exports = {
     verificarToken,
-    verificarAdminRole
+    verificarAdminRole,
+    verificarTokenImg
 }

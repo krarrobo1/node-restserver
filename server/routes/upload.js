@@ -85,6 +85,7 @@ function imagenUsuario(id, res, nombreArchivo) {
         // Si la imagen del usuario ya existe debe ser sobreescrita.
         borrarArchivo(usuarioDB.img, 'usuarios');
         usuarioDB.img = nombreArchivo;
+        usuarioDB.p = 'persona';
         usuarioDB.save();
         res.json({
             usuario: usuarioDB,
@@ -111,21 +112,21 @@ function imagenProducto(id, res, nombreArchivo) {
                 }
             });
         }
+        console.log(nombreArchivo);
+        console.log(productoDB.img);
         borrarArchivo(productoDB.img, 'productos');
         productoDB.img = nombreArchivo;
         productoDB.save();
         res.json({
-            ok: true,
-            producto: productoDB
-        });
+            productoDB
+        })
+
     })
 }
 
 function borrarArchivo(nombreImg, tipo) {
     let rutaImg = path.resolve(__dirname, `../../uploads/${tipo}/${nombreImg}`);
-    console.log(rutaImg);
     if (fs.existsSync(rutaImg)) {
-        console.log('true');
         fs.unlinkSync(rutaImg);
     };
 }
