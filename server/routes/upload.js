@@ -101,30 +101,32 @@ function imagenProducto(id, res, nombreArchivo) {
                 ok: false,
                 err
             });
-        };
+        }
         if (!productoDB) {
+            borrarArchivo(nombreArchivo, 'productos');
             return res.status(400).json({
                 ok: false,
                 err: {
                     message: 'Producto no encontrado'
                 }
-            })
-        };
+            });
+        }
         borrarArchivo(productoDB.img, 'productos');
         productoDB.img = nombreArchivo;
         productoDB.save();
         res.json({
             ok: true,
-            producto: productoDB,
-            img: nombreArchivo
+            producto: productoDB
         });
-    });
+    })
 }
 
 function borrarArchivo(nombreImg, tipo) {
     let rutaImg = path.resolve(__dirname, `../../uploads/${tipo}/${nombreImg}`);
+    console.log(rutaImg);
     if (fs.existsSync(rutaImg)) {
-        fs.unlinkSync(rutaImg)
+        console.log('true');
+        fs.unlinkSync(rutaImg);
     };
 }
 module.exports = {
