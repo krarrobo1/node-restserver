@@ -10,7 +10,7 @@
     "author": "Ricardo Arrobo",
     "license": "ISC",
     "dependencies": {
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "express": "^4.16.4",
         "express-fileupload": "^1.1.4",
         "google-auth-library": "^4.0.0",
